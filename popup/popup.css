@@ -1,10 +1,33 @@
+
+.main-container {
+  display: flex;
+  flex-direction: row;
+  /* background-color: pink; */
+  height: 90vh;
+}
+
 #tabList-container {
   margin-right: 20px;
   padding-left: 0 !important;
+  width: 40%;
+  overflow: auto;
+  height: 100%;
+}
+
+.image-container {
+  width: 60%;
+  height: 100%;
+  background-color: lightblue;
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    overflow: hidden;
 }
 
 .tab-subcontainer{
-  width: 100%;
   height: auto;
   border: 1px solid black;
   border-radius: 5px;
@@ -13,5 +36,11 @@
   margin: 10px 5px;
   overflow: hidden;
   cursor: pointer;
+  word-wrap: break-word;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.tab-subcontainer:hover {
+  font-weight: bolder;
+  font-size: larger;
 }
