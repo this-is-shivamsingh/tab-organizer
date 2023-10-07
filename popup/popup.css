@@ -1,9 +1,9 @@
-
 .main-container {
   display: flex;
   flex-direction: row;
   /* background-color: pink; */
   height: 90vh;
+  width: 800px;
 }
 
 #tabList-container {
@@ -21,13 +21,14 @@
 }
 
 .image-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: fill;
-    overflow: hidden;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  overflow: hidden;
 }
 
-.tab-subcontainer{
+.tab-subcontainer {
+  background-color: lightgrey;
   height: auto;
   border: 1px solid black;
   border-radius: 5px;
@@ -38,6 +39,25 @@
   cursor: pointer;
   word-wrap: break-word;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  display: flex;
+  flex-direction: row;
+}
+
+.favicon-container {
+  width: 30px;
+  height: 30px;
+  margin: auto 10px auto 0;
+}
+
+.favicon-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  overflow: hidden;
+}
+
+.tab-info {
+  width: 70%;
 }
 
 .tab-subcontainer:hover {

@@ -8,7 +8,6 @@ chrome.tabs.query({}, (tabs) => {
     let _openedTabList = tabByGroup[hostURL];
     _openedTabList?.forEach((tab) => {
       let div = document.createElement("div");
-      div.textContent = limitURLWords(tab.url);
       div.className = "tab-subcontainer";
       div.id = tab.id;
       div.onclick = function () {
@@ -17,6 +16,24 @@ chrome.tabs.query({}, (tabs) => {
       div.onmouseover = function () {
         showTabPreview(tab.id);
       };
+
+      // favicon container
+      let favicon_contianer = document.createElement("div");
+      favicon_contianer.setAttribute("class", "favicon-container");
+      let image_tag = document.createElement("img");
+      image_tag.setAttribute(
+        "src",
+        tab?.favIconUrl || "../assets/images/placeholder_600x400.png"
+      );
+      favicon_contianer.appendChild(image_tag);
+      div.appendChild(favicon_contianer);
+
+      // tab-infor
+      let tabInfo = document.createElement("div");
+      tabInfo.setAttribute("class", "tab-info");
+      tabInfo.textContent = limitURLWords(tab.url);
+      div.appendChild(tabInfo);
+
       tabList.appendChild(div);
     });
   });
@@ -42,7 +59,10 @@ function showTabPreview(tabID) {
       const _previewURL = response.url;
       const ele = document.getElementById("preview-tab");
       const imgNode = ele.childNodes[1];
-      imgNode.setAttribute("src", _previewURL || '../assets/images/placeholder_600x400.png');
+      imgNode.setAttribute(
+        "src",
+        _previewURL || "../assets/images/placeholder_600x400.png"
+      );
     }
   );
 }
