@@ -24,16 +24,22 @@
   "permissions": [
     "<all_urls>",
     "tabs",
-    "storage"
+    "storage",
+    "unlimitedStorage",
+    "activeTab"
   ],
   "optional_permissions": [
     "<all_urls>",
     "tabs",
-    "storage"
+    "storage",
+    "unlimitedStorage",
+    "activeTab"
   ],
   "host_permissions": [
     "<all_urls>",
     "tabs",
-    "storage"
+    "storage",
+    "unlimitedStorage",
+    "activeTab"
   ]
 }

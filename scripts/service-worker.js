@@ -1,5 +1,4 @@
 let previousTabId = null;
-let screenshotURLMap = {};
 
 const debounce = (func, delay) => {
   let timer;
@@ -18,26 +17,37 @@ const saveToDB = (store) => {
     .catch((err) => console.log("Error while storing data: ", err));
 };
 
-const getValue = (key) => {
+// const fetchFromDB = (key, sendResponse) => {
+//   console.log(" key ==> ", key);
+//   chrome.storage.local
+//     .get(`${key}`)
+//     .then((value) => (value.hasOwnProperty(`${key}`) ? value[`${key}`] : ""))
+//     .catch((err) => {
+//       console.log("Error while getting data from DB", err);
+//       sendResponse({ url: "" });
+//     });
+// };
+
+const removeFromDB = (tabID) => {
+  console.log(" tab ID remove ===> ", tabID);
   chrome.storage.local
-    .get([key])
-    .then((value) => value[key])
-    .catch((err) => console.log("Error while getting data from D B", err));
+    .remove(`${tabID}`)
+    .then((res) => console.log("Tab ID", tabID, "is removed"))
+    .catch((err) => console.log("Error while removing element from DB", err));
 };
 
 const captureCurrentTab = (tabID) => {
-  console.log("Capturing Started....")
+  console.log("Capturing Started....");
   chrome.tabs
     .captureVisibleTab({ format: "png" })
     .then((url) => {
-      console.log(" capture -> ", url);
       let obj = {};
       obj[tabID] = url;
-      screenshotURLMap[tabID] = url || ''
+      console.log(" TABID : ", obj);
       saveToDB(obj);
     })
     .catch((err) => console.log("Error => ", err));
-  console.log(" ---> Capturing finished... ");
+  console.log("Capturing finished... ");
 };
 
 const captureAndStoreImage = debounce(captureCurrentTab, 500);
@@ -45,21 +55,34 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
   const newTabId = activeInfo.tabId;
   if (!newTabId) return;
   console.log(" ==> newTabID ", newTabId, previousTabId, activeInfo);
+  // chrome.storage.local.get((res) => console.log(" res --> ", res))
   // TODO: Currently we are takeing preview just as tab open, but later we wanted to preview
   // we user just switched to other tab.
   // because, may be user had changed the url of tab
   captureAndStoreImage(newTabId);
 });
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  if (request.action === "getTabPreviewImage") {
-    console.log(
-      " --> check 1",
-      Object.keys(screenshotURLMap).length,
-      request.tabID
-    );
-    // const value = getValue(request?.tabID);
-    // console.log("db -> ", value);
-    sendResponse({ url: screenshotURLMap[request?.tabID] });
-  }
+// Chrome listner when TAB is removed
+chrome.tabs.onRemoved.addListener((tabID, removeTabInfo) => {
+  // remove tab data from db
+  console.log("removed TAB", removeTabInfo);
+  removeFromDB(tabID);
 });
+
+// chrome.runtime.onMessage.addListener(async function (
+//   request,
+//   sender,
+//   sendResponse
+// ) {
+//   if (request.action === "getTabPreviewImage") {
+//     const _url = screenshotURLMap[request?.tabID];
+//     fetchFromDB(request?.tabID, sendResponse)
+//       .then((res) => {
+//         console.log(" res <==> ", res);
+//         sendResponse({ url: _url, res_url: res });
+//       })
+//       .catch((err) => console.log("Error: ", err));
+//     sendResponse({ url: _url });
+//   }
+//   return true;
+// });
