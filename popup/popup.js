@@ -1,18 +1,24 @@
 import { limitURLWords } from "./helper.js";
 
+const clearAll = () => {
+  chrome.storage.local.clear();
+};
 
-document.addEventListener('DOMContentLoaded', function() {
-  const clearLocalStorage = document.getElementById('clear-all-localstorage');
-  clearLocalStorage.addEventListener('click', function() {
-    // Send a message to the content script to start listening for clicks on element with ID 'abc'
-    console.log(" clicked ... clear All ")
-    chrome.storage.local.clear()
+document.addEventListener("DOMContentLoaded", function () {
+  const clearLocalStorage = document.getElementById("clear-all-localstorage");
+  clearLocalStorage.addEventListener("click", function () {
+    console.log(" clicked ... clear All ");
+    clearAll();
   });
 });
 
 chrome.tabs.query({}, (tabs) => {
   let tabList = document.getElementById("tabList-container");
   let tabByGroup = groupByURL(tabs);
+  document.getElementById(
+    "show-tab-opened"
+  ).innerHTML = `Tab Opened: ${tabs.length}`;
+
   console.log("tab ", tabByGroup);
   Object.keys(tabByGroup)?.forEach((hostURL) => {
     let _openedTabList = tabByGroup[hostURL];
@@ -25,7 +31,7 @@ chrome.tabs.query({}, (tabs) => {
       };
       div.onmouseover = function () {
         showTabPreview(tab.id);
-        setTabTitle(tab.title)
+        setTabTitle(tab.title);
       };
 
       // favicon container
@@ -44,12 +50,16 @@ chrome.tabs.query({}, (tabs) => {
       tabInfo.setAttribute("class", "tab-info");
       tabInfo.textContent = limitURLWords(tab.url);
       div.appendChild(tabInfo);
-
       tabList.appendChild(div);
     });
   });
 });
 
+chrome.storage.local.get((result) => {
+  document.getElementById(
+    "show-image-captured"
+  ).innerHTML = `Total Image Captured: ${Object.keys(result).length}`;
+});
 
 function groupByURL(tabs) {
   let tabList = {};
@@ -58,7 +68,6 @@ function groupByURL(tabs) {
     if (!tabList[_baseURL] || tabList[_baseURL].length === 0) {
       tabList[_baseURL] = [];
     }
-
     tabList[_baseURL].push(tab);
   });
   return tabList;
@@ -67,20 +76,23 @@ function groupByURL(tabs) {
 function showTabPreview(tabID) {
   chrome.storage.local.get((result) => {
     // Warning...
-    if(Object.keys(result).length >= 45) {
-      window.alert("Too much space is used, Click <Clear All> to create some space...")
+    if (Object.keys(result).length >= 45) {
+      window.alert(
+        "Too much space is used, Click <Clear All> to create some space..."
+      );
+      clearAll();
       return;
     }
 
-    console.log(" GET TAB_ID: ", tabID, result, result[tabID])
+    console.log(" GET TAB_ID: ", tabID, result, result[tabID]);
     const _previewURL = result[tabID] || "";
     const ele = document.getElementById("preview-tab");
-    const nodeList = ele.childNodes
+    const nodeList = ele.childNodes;
     let imgNode;
-    
-    for(let i = 1; i < nodeList.length; i++){
-      const node = nodeList[i]
-      if(node?.tagName?.toLowerCase() === 'img') {
+
+    for (let i = 1; i < nodeList.length; i++) {
+      const node = nodeList[i];
+      if (node?.tagName?.toLowerCase() === "img") {
         imgNode = node;
       }
     }
@@ -91,8 +103,8 @@ function showTabPreview(tabID) {
   });
 }
 
-function setTabTitle(title){
-  document.getElementById('tab-title').innerHTML = title
+function setTabTitle(title) {
+  document.getElementById("tab-title").innerHTML = title;
 }
 
 function updateActiveTab(tabID) {

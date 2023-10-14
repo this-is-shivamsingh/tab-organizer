@@ -17,17 +17,6 @@ const saveToDB = (store) => {
     .catch((err) => console.log("Error while storing data: ", err));
 };
 
-// const fetchFromDB = (key, sendResponse) => {
-//   console.log(" key ==> ", key);
-//   chrome.storage.local
-//     .get(`${key}`)
-//     .then((value) => (value.hasOwnProperty(`${key}`) ? value[`${key}`] : ""))
-//     .catch((err) => {
-//       console.log("Error while getting data from DB", err);
-//       sendResponse({ url: "" });
-//     });
-// };
-
 const removeFromDB = (tabID) => {
   console.log(" tab ID remove ===> ", tabID);
   chrome.storage.local
@@ -50,12 +39,15 @@ const captureCurrentTab = (tabID) => {
   console.log("Capturing finished... ");
 };
 
+// If user visit a webpage >= 500ms then only images is caputured, it is done because page needs to get stable enough for
+// chrome to capture the image.
 const captureAndStoreImage = debounce(captureCurrentTab, 500);
+
+// When user switch tabs
 chrome.tabs.onActivated.addListener(function (activeInfo) {
   const newTabId = activeInfo.tabId;
   if (!newTabId) return;
   console.log(" ==> newTabID ", newTabId, previousTabId, activeInfo);
-  // chrome.storage.local.get((res) => console.log(" res --> ", res))
   // TODO: Currently we are takeing preview just as tab open, but later we wanted to preview
   // we user just switched to other tab.
   // because, may be user had changed the url of tab
@@ -68,6 +60,16 @@ chrome.tabs.onRemoved.addListener((tabID, removeTabInfo) => {
   console.log("removed TAB", removeTabInfo);
   removeFromDB(tabID);
 });
+
+// TODO
+// Remove all the tabs that are not present in current list
+// chrome.runtime.onMessage.addListener((req, send, sendResponse) => {
+//   if (req.action === "removeTabs") {
+//     // list of opened
+//     const tabList = req.openedTabs;
+//     console.log("tabs to remove ==> ", req?.openedTabs);
+//   }
+// });
 
 // chrome.runtime.onMessage.addListener(async function (
 //   request,
