@@ -7,7 +7,6 @@ const clearAll = () => {
 document.addEventListener("DOMContentLoaded", function () {
   const clearLocalStorage = document.getElementById("clear-all-localstorage");
   clearLocalStorage.addEventListener("click", function () {
-    console.log(" clicked ... clear All ");
     clearAll();
   });
 });
@@ -19,7 +18,6 @@ chrome.tabs.query({}, (tabs) => {
     "show-tab-opened"
   ).innerHTML = `Tab Opened: ${tabs.length}`;
 
-  console.log("tab ", tabByGroup);
   Object.keys(tabByGroup)?.forEach((hostURL) => {
     let _openedTabList = tabByGroup[hostURL];
     _openedTabList?.forEach((tab) => {
@@ -45,12 +43,17 @@ chrome.tabs.query({}, (tabs) => {
       favicon_contianer.appendChild(image_tag);
       div.appendChild(favicon_contianer);
 
-      // tab-infor
+      // // tab-info
       let tabInfo = document.createElement("div");
       tabInfo.setAttribute("class", "tab-info");
       tabInfo.textContent = limitURLWords(tab.url);
       div.appendChild(tabInfo);
-      tabList.appendChild(div);
+
+      try {
+        tabList.appendChild(div); 
+      } catch (error) {
+        console.log('[Errror] appending child tab failed with error:', error, `for host: ${hostURL}`)
+      }
     });
   });
 });
@@ -84,7 +87,7 @@ function showTabPreview(tabID) {
       return;
     }
 
-    console.log(" GET TAB_ID: ", tabID, result, result[tabID]);
+    console.log("GET TAB_ID: ", tabID, result, result[tabID]);
     const _previewURL = result[tabID] || "";
     const ele = document.getElementById("preview-tab");
     const nodeList = ele.childNodes;

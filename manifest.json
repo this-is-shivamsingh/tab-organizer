@@ -22,24 +22,12 @@
     "service_worker": "scripts/service-worker.js"
   },
   "permissions": [
-    "<all_urls>",
-    "tabs",
-    "storage",
-    "unlimitedStorage",
-    "activeTab"
-  ],
-  "optional_permissions": [
-    "<all_urls>",
     "tabs",
     "storage",
     "unlimitedStorage",
     "activeTab"
   ],
   "host_permissions": [
-    "<all_urls>",
-    "tabs",
-    "storage",
-    "unlimitedStorage",
-    "activeTab"
+    "<all_urls>"
   ]
 }

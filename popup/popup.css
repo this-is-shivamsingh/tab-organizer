@@ -2,12 +2,12 @@
   display: flex;
   flex-direction: row;
   /* background-color: pink; */
-  height: 90vh;
-  width: 800px;
+  height: 600px;
+  /* chrome extension can't go beyond 800px in width and 600px in height */
+  width: 700px;
 }
 
 #tabList-container {
-  margin-right: 20px;
   padding-left: 0 !important;
   width: 25%;
   overflow: auto;
@@ -48,11 +48,13 @@
   height: 100%;
   object-fit: cover;
   overflow: hidden;
-  object-position: top left;
 }
 
 .image-container img:hover {
-  transform: scale(1.6);
+  transform: scale(2);
+  object-fit: contain;
+  overflow: auto;
+  overflow-x: scroll;
 }
 
 .tab-subcontainer {
