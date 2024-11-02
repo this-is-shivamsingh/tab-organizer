@@ -94,3 +94,18 @@
   font-weight: bold;
   font-size: 14px;
 }
+
+#opend-tab-filter-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.favicon-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#opend-tab-filter-container .selected-favicon {
+  border: 2px solid skyblue;
+}
