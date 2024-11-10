@@ -1,5 +1,6 @@
 import { limitURLWords } from "./helper.js";
 
+const IMAGE_CAPTURE_LIMIT = 55
 const clearAll = () => {
   chrome.storage.local.clear();
 };
@@ -14,7 +15,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 chrome.tabs.query({}, (tabs) => {
-  console.log("--> gojo")
   let tabList = document.getElementById("tabList-container");
   let tabByGroup = groupByURL(tabs);
   document.getElementById(
@@ -58,7 +58,7 @@ chrome.tabs.query({}, (tabs) => {
       try {
         tabList.appendChild(div); 
       } catch (error) {
-        console.log('[Errror] appending child tab failed with error:', error, `for host: ${hostURL}`)
+        console.error('[Errror] appending child tab failed with error:', error, `for host: ${hostURL}`)
       }
     });
 
@@ -72,7 +72,6 @@ chrome.tabs.query({}, (tabs) => {
       img.setAttribute('src', faviconURL)
 
       span.onclick = function(){
-        console.log(this)
         const alreadyActive = this.classList.contains(selectedFaviconClassName)
         
         if(alreadyActive) {
@@ -140,7 +139,9 @@ function groupByURL(tabs) {
 function showTabPreview(tabID) {
   chrome.storage.local.get((result) => {
     // Warning...
-    if (Object.keys(result).length >= 45) {
+    if (Object.keys(result).length >= IMAGE_CAPTURE_LIMIT) {
+      // NOTE: After implementation of caching,
+      // we should not get this alert
       window.alert(
         "Too much space is used, Click <Clear All> to create some space..."
       );
@@ -148,7 +149,6 @@ function showTabPreview(tabID) {
       return;
     }
 
-    // console.log("GET TAB_ID: ", tabID, result, result[tabID]);
     const _previewURL = result[tabID] || "";
     const ele = document.getElementById("preview-tab");
     const nodeList = ele.childNodes;
