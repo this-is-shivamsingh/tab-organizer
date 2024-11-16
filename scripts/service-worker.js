@@ -14,7 +14,7 @@ const lru = new LRU(CACH_LIMIT)
 
 // Updating tabs Value in cache
 chrome.tabs.query({}, (tabs) => {
-  tabs.forEach((tab) => lru.write(tab.id, 'N/A'))
+  for(let i = 0; i < Math.min(CACH_LIMIT, tabs.length); i++) writeLRUCache(tabs[i].id, 'N/A')
 });
 
 const debounce = (func, delay) => {
